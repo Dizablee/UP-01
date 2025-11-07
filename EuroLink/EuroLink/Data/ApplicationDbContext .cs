@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using EuroLink.Models;  
+using EuroLink.Models;
 
 namespace EuroLink.Data
 {
