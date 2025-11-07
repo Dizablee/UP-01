@@ -2,7 +2,7 @@
 
 namespace EuroLink.Models
 {
-    public class Phone  
+    public class Phone
     {
         public int Id { get; set; }
 
