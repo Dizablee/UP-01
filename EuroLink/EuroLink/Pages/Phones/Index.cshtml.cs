@@ -17,7 +17,7 @@ namespace EuroLink.Pages.Phones
 
         public async Task OnGetAsync()
         {
-           
+
             Phones = await _phoneRepository.GetAllPhonesAsync();
         }
     }
