@@ -1,41 +1,56 @@
 ﻿@page
 @model EuroLink.Pages.Phones.IndexModel
+@{
+    ViewData["Title"] = "Телефоны";
+}
 
-<h2>Список телефонов</h2>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Список телефонов</h1>
+        <a asp-page="Create" class="btn btn-success">Добавить телефон</a>
+    </div>
 
-<div style="margin-bottom: 20px;">
-    <a href="/Phones/Create" class="btn btn-primary">Добавить телефон</a>
-</div>
-
-@if (Model.Phones != null && Model.Phones.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Бренд</th>
-                <th>Модель</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Цвет</th>
-                <th>Память</th>
-            </tr>
-        </thead>
-        <tbody>
+    @if (Model.Phones != null && Model.Phones.Any())
+    {
+        <div class="row">
             @foreach (var phone in Model.Phones)
             {
-                <tr>
-                    <td>@phone.Brand</td>
-                    <td>@phone.Model</td>
-                    <td>@phone.Price.ToString("N0") ₽</td>
-                    <td>@phone.StockQuantity шт.</td>
-                    <td>@phone.Color</td>
-                    <td>@phone.Memory</td>
-                </tr>
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@phone.Brand @phone.Model</h5>
+                            <p class="card-text">
+                                <strong>Цена:</strong> @phone.Price.ToString("N0") ₽<br>
+                                <strong>В наличии:</strong> @phone.StockQuantity шт.<br>
+                                @if (!string.IsNullOrEmpty(phone.Color))
+                                {
+                                    <strong>Цвет:</strong> @phone.Color
+
+                                    <br>
+                                }
+                                @if (!string.IsNullOrEmpty(phone.Memory))
+                                {
+                                    <strong>Память:</strong> @phone.Memory
+
+                                    <br>
+                                }
+                            </p>
+                            @if (!string.IsNullOrEmpty(phone.Description))
+                            {
+                                <p class="card-text">@phone.Description</p>
+                            }
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>Телефонов пока нет. <a href="/Phones/Create">Добавить первый телефон</a></p>
-}
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <h4 class="text-muted">Телефонов пока нет</h4>
+            <p class="text-muted">Добавьте первый телефон в каталог</p>
+            <a asp-page="Create" class="btn btn-primary">Добавить телефон</a>
+        </div>
+    }
+</div>
