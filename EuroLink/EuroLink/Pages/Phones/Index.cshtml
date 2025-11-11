@@ -1,0 +1,41 @@
+﻿@page
+@model EuroLink.Pages.Phones.IndexModel
+
+<h2>Список телефонов</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="/Phones/Create" class="btn btn-primary">Добавить телефон</a>
+</div>
+
+@if (Model.Phones != null && Model.Phones.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Бренд</th>
+                <th>Модель</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Цвет</th>
+                <th>Память</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var phone in Model.Phones)
+            {
+                <tr>
+                    <td>@phone.Brand</td>
+                    <td>@phone.Model</td>
+                    <td>@phone.Price.ToString("N0") ₽</td>
+                    <td>@phone.StockQuantity шт.</td>
+                    <td>@phone.Color</td>
+                    <td>@phone.Memory</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Телефонов пока нет. <a href="/Phones/Create">Добавить первый телефон</a></p>
+}
