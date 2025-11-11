@@ -1,0 +1,63 @@
+﻿@page
+@model EuroLink.Pages.Phones.CreateModel
+
+<h2>Добавить телефон</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div style="color: red; margin-bottom: 15px;">@Model.ErrorMessage</div>
+}
+
+@if (Model.SuccessMessage)
+{
+    <div style="color: green; margin-bottom: 15px;">Телефон успешно добавлен!</div>
+}
+
+<form method="post">
+    <div style="margin-bottom: 10px;">
+        <label>Бренд:</label>
+        <input asp-for="Phone.Brand" />
+        <span asp-validation-for="Phone.Brand" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Модель:</label>
+        <input asp-for="Phone.Model" />
+        <span asp-validation-for="Phone.Model" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Цена:</label>
+        <input asp-for="Phone.Price" type="number" step="0.01" />
+        <span asp-validation-for="Phone.Price" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Количество:</label>
+        <input asp-for="Phone.StockQuantity" type="number" />
+        <span asp-validation-for="Phone.StockQuantity" style="color: red;"></span>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Цвет:</label>
+        <input asp-for="Phone.Color" />
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Память:</label>
+        <input asp-for="Phone.Memory" />
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label>Описание:</label>
+        <textarea asp-for="Phone.Description"></textarea>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label>URL изображения:</label>
+        <input asp-for="Phone.ImageUrl" />
+    </div>
+
+    <button type="submit">Сохранить телефон</button>
+    <a href="/Phones/Index" style="margin-left: 10px;">Отмена</a>
+</form>
