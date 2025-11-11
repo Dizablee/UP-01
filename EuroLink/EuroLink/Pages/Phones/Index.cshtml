@@ -15,13 +15,33 @@
         <div class="row">
             @foreach (var phone in Model.Phones)
             {
-                <div class="col-md-6 col-lg-4 mb-3">
-                    <div class="card">
-                        <div class="card-body">
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Блок с изображением -->
+                        <div class="card-img-container" style="height: 200px; overflow: hidden; background: #f8f9fa;">
+                            @if (!string.IsNullOrEmpty(phone.ImageUrl))
+                            {
+                                <img src="@phone.ImageUrl" class="card-img-top h-100 w-100"
+                                     alt="@phone.Brand @phone.Model"
+                                     style="object-fit: contain;"
+                                     onerror="this.style.display='none'">
+                            }
+                            else
+                            {
+                                <div class="h-100 w-100 d-flex align-items-center justify-content-center">
+                                    <span class="text-muted">Нет изображения</span>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title">@phone.Brand @phone.Model</h5>
-                            <p class="card-text">
+                            <p class="card-text mb-2">
                                 <strong>Цена:</strong> @phone.Price.ToString("N0") ₽<br>
-                                <strong>В наличии:</strong> @phone.StockQuantity шт.<br>
+                                <strong>В наличии:</strong>
+                                <span class="badge @(phone.StockQuantity > 0 ? "bg-success" : "bg-secondary")">
+                                    @phone.StockQuantity шт.
+                                </span><br>
                                 @if (!string.IsNullOrEmpty(phone.Color))
                                 {
                                     <strong>Цвет:</strong> @phone.Color
@@ -37,7 +57,7 @@
                             </p>
                             @if (!string.IsNullOrEmpty(phone.Description))
                             {
-                                <p class="card-text">@phone.Description</p>
+                                <p class="card-text small text-muted mt-auto">@phone.Description</p>
                             }
                         </div>
                     </div>
@@ -54,3 +74,17 @@
         </div>
     }
 </div>
+
+<style>
+    .card {
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+    .card-img-container {
+        border-bottom: 1px solid rgba(0,0,0,0.125);
+    }
+</style>
