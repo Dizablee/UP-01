@@ -19,48 +19,94 @@
             <div class="col-md-6">
                 <div class="mb-3">
                     <label asp-for="Phone.Brand" class="form-label">Бренд *</label>
-                    <input asp-for="Phone.Brand" class="form-control" />
+                    <select asp-for="Phone.Brand" class="form-select">
+                        <option value="">Выберите бренд</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Google">Google</option>
+                        <option value="OnePlus">OnePlus</option>
+                        <option value="Huawei">Huawei</option>
+                        <option value="Honor">Honor</option>
+                        <option value="Realme">Realme</option>
+                        <option value="OPPO">OPPO</option>
+                        <option value="Vivo">Vivo</option>
+                        <option value="Nokia">Nokia</option>
+                        <option value="Motorola">Motorola</option>
+                        <option value="Sony">Sony</option>
+                    </select>
                     <span asp-validation-for="Phone.Brand" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.Model" class="form-label">Модель *</label>
-                    <input asp-for="Phone.Model" class="form-control" />
+                    <input asp-for="Phone.Model" class="form-control" placeholder="Например: Galaxy S23 или iPhone 15" />
                     <span asp-validation-for="Phone.Model" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.Price" class="form-label">Цена (руб) *</label>
-                    <input asp-for="Phone.Price" type="number" step="0.01" class="form-control" />
+                    <input asp-for="Phone.Price" type="number" step="0.01" class="form-control" min="0" />
                     <span asp-validation-for="Phone.Price" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.StockQuantity" class="form-label">Количество на складе *</label>
-                    <input asp-for="Phone.StockQuantity" type="number" class="form-control" />
+                    <input asp-for="Phone.StockQuantity" type="number" class="form-control" min="0" />
                     <span asp-validation-for="Phone.StockQuantity" class="text-danger"></span>
                 </div>
             </div>
 
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label asp-for="Phone.Color" class="form-label">Цвет</label>
-                    <input asp-for="Phone.Color" class="form-control" />
+                    <label class="form-label">Цвет</label>
+                    <div class="color-palette mb-2">
+                        <!-- Основные цвета -->
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Черный" style="background-color: #000000;" title="Черный"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Белый" style="background-color: #FFFFFF; border: 1px solid #ccc;" title="Белый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Серый" style="background-color: #808080;" title="Серый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Серебристый" style="background-color: #C0C0C0;" title="Серебристый"></button>
+
+                        <!-- Яркие цвета -->
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Красный" style="background-color: #FF0000;" title="Красный"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Синий" style="background-color: #0000FF;" title="Синий"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Зеленый" style="background-color: #008000;" title="Зеленый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Фиолетовый" style="background-color: #800080;" title="Фиолетовый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Розовый" style="background-color: #FFC0CB;" title="Розовый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Золотой" style="background-color: #FFD700;" title="Золотой"></button>
+
+                        <!-- Другие цвета -->
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Голубой" style="background-color: #00FFFF;" title="Голубой"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Бирюзовый" style="background-color: #40E0D0;" title="Бирюзовый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Оранжевый" style="background-color: #FFA500;" title="Оранжевый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Коричневый" style="background-color: #8B4513;" title="Коричневый"></button>
+                        <button type="button" class="color-option btn btn-sm m-1" data-color="Бежевый" style="background-color: #F5F5DC; border: 1px solid #ccc;" title="Бежевый"></button>
+                    </div>
+                    <input asp-for="Phone.Color" class="form-control" id="colorInput" placeholder="Или введите свой цвет" />
+                    <small class="form-text text-muted">Нажмите на цвет или введите свой вариант</small>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.Memory" class="form-label">Память</label>
-                    <input asp-for="Phone.Memory" class="form-control" />
+                    <select asp-for="Phone.Memory" class="form-select">
+                        <option value="">Выберите память</option>
+                        <option value="64GB">64GB</option>
+                        <option value="128GB">128GB</option>
+                        <option value="256GB">256GB</option>
+                        <option value="512GB">512GB</option>
+                        <option value="1TB">1TB</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.Description" class="form-label">Описание</label>
-                    <textarea asp-for="Phone.Description" class="form-control" rows="3"></textarea>
+                    <textarea asp-for="Phone.Description" class="form-control" rows="3" placeholder="Краткое описание характеристик..."></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Phone.ImageUrl" class="form-label">URL изображения</label>
-                    <input asp-for="Phone.ImageUrl" class="form-control" />
+                    <input asp-for="Phone.ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+                    <small class="form-text text-muted">Ссылка на изображение телефона</small>
                 </div>
             </div>
         </div>
@@ -74,4 +120,95 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorOptions = document.querySelectorAll('.color-option');
+            const colorInput = document.getElementById('colorInput');
+            let selectedColor = '';
+
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const color = this.getAttribute('data-color');
+                    selectedColor = color;
+                    colorInput.value = color;
+
+                    // Сбрасываем стили у всех кнопок
+                    colorOptions.forEach(opt => {
+                        opt.classList.remove('selected-color');
+                        opt.style.transform = 'scale(1)';
+                        opt.style.boxShadow = 'none';
+                    });
+
+                    // Выделяем выбранную кнопку
+                    this.classList.add('selected-color');
+                    this.style.transform = 'scale(1.1)';
+                    this.style.boxShadow = '0 0 0 2px #007bff';
+                });
+            });
+
+            // Обработка ручного ввода
+            colorInput.addEventListener('input', function() {
+                selectedColor = this.value;
+
+                // Сбрасываем выделение если пользователь вводит свой цвет
+                colorOptions.forEach(opt => {
+                    opt.classList.remove('selected-color');
+                    opt.style.transform = 'scale(1)';
+                    opt.style.boxShadow = 'none';
+                });
+            });
+
+            // Показываем подсказку при наведении
+            colorOptions.forEach(option => {
+                option.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.transition = 'all 0.2s ease';
+                });
+
+                option.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('selected-color')) {
+                        this.style.transform = 'scale(1)';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            background-color: #f8f9fa;
+        }
+
+        .color-option {
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            padding: 0;
+        }
+
+            .color-option:hover {
+                transform: scale(1.05);
+                border-color: #6c757d;
+            }
+
+        .selected-color {
+            border: 2px solid #007bff !important;
+            box-shadow: 0 0 0 2px #007bff;
+            transform: scale(1.1);
+        }
+
+        .form-text {
+            font-size: 0.875rem;
+        }
+    </style>
 }
