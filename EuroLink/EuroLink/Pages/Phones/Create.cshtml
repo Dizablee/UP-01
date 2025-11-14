@@ -1,121 +1,266 @@
 ﻿@page
 @model EuroLink.Pages.Phones.CreateModel
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <div class="container mt-4">
-    <h2>Добавить новый телефон</h2>
-
-    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-    {
-        <div class="alert alert-danger">@Model.ErrorMessage</div>
-    }
-
-    @if (Model.SuccessMessage)
-    {
-        <div class="alert alert-success">Телефон успешно добавлен в каталог!</div>
-    }
-
-    <form method="post" class="mt-3">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label asp-for="Phone.Brand" class="form-label">Бренд *</label>
-                    <select asp-for="Phone.Brand" class="form-select">
-                        <option value="">Выберите бренд</option>
-                        <option value="Samsung">Samsung</option>
-                        <option value="Apple">Apple</option>
-                        <option value="Xiaomi">Xiaomi</option>
-                        <option value="Google">Google</option>
-                        <option value="OnePlus">OnePlus</option>
-                        <option value="Huawei">Huawei</option>
-                        <option value="Honor">Honor</option>
-                        <option value="Realme">Realme</option>
-                        <option value="OPPO">OPPO</option>
-                        <option value="Vivo">Vivo</option>
-                        <option value="Nokia">Nokia</option>
-                        <option value="Motorola">Motorola</option>
-                        <option value="Sony">Sony</option>
-                    </select>
-                    <span asp-validation-for="Phone.Brand" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Phone.Model" class="form-label">Модель *</label>
-                    <input asp-for="Phone.Model" class="form-control" placeholder="Например: Galaxy S23 или iPhone 15" />
-                    <span asp-validation-for="Phone.Model" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Phone.Price" class="form-label">Цена (руб) *</label>
-                    <input asp-for="Phone.Price" type="number" step="0.01" class="form-control" min="0" />
-                    <span asp-validation-for="Phone.Price" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Phone.StockQuantity" class="form-label">Количество на складе *</label>
-                    <input asp-for="Phone.StockQuantity" type="number" class="form-control" min="0" />
-                    <span asp-validation-for="Phone.StockQuantity" class="text-danger"></span>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Цвет</label>
-                    <div class="color-palette mb-2">
-                        <!-- Основные цвета -->
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Черный" style="background-color: #000000;" title="Черный"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Белый" style="background-color: #FFFFFF; border: 1px solid #ccc;" title="Белый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Серый" style="background-color: #808080;" title="Серый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Серебристый" style="background-color: #C0C0C0;" title="Серебристый"></button>
-
-                        <!-- Яркие цвета -->
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Красный" style="background-color: #FF0000;" title="Красный"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Синий" style="background-color: #0000FF;" title="Синий"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Зеленый" style="background-color: #008000;" title="Зеленый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Фиолетовый" style="background-color: #800080;" title="Фиолетовый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Розовый" style="background-color: #FFC0CB;" title="Розовый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Золотой" style="background-color: #FFD700;" title="Золотой"></button>
-
-                        <!-- Другие цвета -->
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Голубой" style="background-color: #00FFFF;" title="Голубой"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Бирюзовый" style="background-color: #40E0D0;" title="Бирюзовый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Оранжевый" style="background-color: #FFA500;" title="Оранжевый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Коричневый" style="background-color: #8B4513;" title="Коричневый"></button>
-                        <button type="button" class="color-option btn btn-sm m-1" data-color="Бежевый" style="background-color: #F5F5DC; border: 1px solid #ccc;" title="Бежевый"></button>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Красивый заголовок -->
+            <div class="page-header text-center mb-5">
+                <div class="header-content">
+                    <div class="phone-icon-header">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
-                    <input asp-for="Phone.Color" class="form-control" id="colorInput" placeholder="Или введите свой цвет" />
-                    <small class="form-text text-muted">Нажмите на цвет или введите свой вариант</small>
+                    <h1 class="page-title">Добавить новый телефон</h1>
+                    <p class="page-subtitle">Заполните информацию о телефоне для добавления в каталог</p>
                 </div>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="Phone.Memory" class="form-label">Память</label>
-                    <select asp-for="Phone.Memory" class="form-select">
-                        <option value="">Выберите память</option>
-                        <option value="64GB">64GB</option>
-                        <option value="128GB">128GB</option>
-                        <option value="256GB">256GB</option>
-                        <option value="512GB">512GB</option>
-                        <option value="1TB">1TB</option>
-                    </select>
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show custom-alert" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    @Model.ErrorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+            }
 
-                <div class="mb-3">
-                    <label asp-for="Phone.Description" class="form-label">Описание</label>
-                    <textarea asp-for="Phone.Description" class="form-control" rows="3" placeholder="Краткое описание характеристик..."></textarea>
+            @if (Model.SuccessMessage)
+            {
+                <div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Телефон успешно добавлен в каталог!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+            }
 
-                <div class="mb-3">
-                    <label asp-for="Phone.ImageUrl" class="form-label">URL изображения</label>
-                    <input asp-for="Phone.ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
-                    <small class="form-text text-muted">Ссылка на изображение телефона</small>
+            <!-- Основная форма в красивой карточке -->
+            <div class="main-card">
+                <div class="card-body">
+                    <form method="post">
+                        <div class="row g-4">
+                            <!-- Левая колонка - Основная информация -->
+                            <div class="col-md-6">
+                                <div class="section">
+                                    <h3 class="section-title">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Основная информация
+                                    </h3>
+
+                                    <!-- Бренд -->
+                                    <div class="form-group">
+                                        <label asp-for="Phone.Brand" class="form-label">Бренд *</label>
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-tag"></i>
+                                            <input asp-for="Phone.Brand"
+                                                   class="form-control"
+                                                   list="brandOptions"
+                                                   placeholder="Выберите или введите бренд"
+                                                   id="brandInput" />
+                                        </div>
+                                        <datalist id="brandOptions">
+                                            <option value="Samsung">Samsung</option>
+                                            <option value="Apple">Apple</option>
+                                            <option value="Xiaomi">Xiaomi</option>
+                                            <option value="Google">Google</option>
+                                            <option value="OnePlus">OnePlus</option>
+                                            <option value="Huawei">Huawei</option>
+                                            <option value="Honor">Honor</option>
+                                            <option value="Realme">Realme</option>
+                                            <option value="OPPO">OPPO</option>
+                                            <option value="Vivo">Vivo</option>
+                                            <option value="Nokia">Nokia</option>
+                                            <option value="Motorola">Motorola</option>
+                                            <option value="Sony">Sony</option>
+                                        </datalist>
+                                        <span asp-validation-for="Phone.Brand" class="error-message"></span>
+                                    </div>
+
+                                    <!-- Модель -->
+                                    <div class="form-group">
+                                        <label asp-for="Phone.Model" class="form-label">Модель *</label>
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-mobile"></i>
+                                            <input asp-for="Phone.Model" class="form-control" placeholder="Например: Galaxy S23 или iPhone 15" />
+                                        </div>
+                                        <span asp-validation-for="Phone.Model" class="error-message"></span>
+                                    </div>
+
+                                    <!-- Цена и количество в одной строке -->
+                                    <div class="row g-3">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="Phone.Price" class="form-label">Цена (руб) *</label>
+                                                <div class="input-with-icon">
+                                                    <i class="fas fa-ruble-sign"></i>
+                                                    <input asp-for="Phone.Price" type="number" step="0.01" class="form-control price-input" min="0" placeholder="0.00" value="0" />
+                                                </div>
+                                                <span asp-validation-for="Phone.Price" class="error-message"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label asp-for="Phone.StockQuantity" class="form-label">Количество *</label>
+                                                <div class="input-with-icon">
+                                                    <i class="fas fa-box"></i>
+                                                    <input asp-for="Phone.StockQuantity" type="number" class="form-control quantity-input" min="0" placeholder="0" value="0" />
+                                                </div>
+                                                <span asp-validation-for="Phone.StockQuantity" class="error-message"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Память -->
+                                    <div class="form-group">
+                                        <label asp-for="Phone.Memory" class="form-label">Память</label>
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-sd-card"></i>
+                                            <input asp-for="Phone.Memory" class="form-control" placeholder="Например: 128GB или 256GB" />
+                                        </div>
+                                        <div class="form-hint">
+                                            <i class="fas fa-info-circle"></i>
+                                            Укажите объем памяти
+                                        </div>
+                                    </div>
+
+                                    <!-- Описание -->
+                                    <div class="form-group">
+                                        <label asp-for="Phone.Description" class="form-label">Описание</label>
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-file-alt"></i>
+                                            <textarea asp-for="Phone.Description" class="form-control" rows="4" placeholder="Опишите характеристики телефона..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Правая колонка - Изображение и цвет -->
+                            <div class="col-md-6">
+                                <div class="section">
+                                    <h3 class="section-title">
+                                        <i class="fas fa-palette me-2"></i>
+                                        Визуальная часть
+                                    </h3>
+
+                                    <!-- Предпросмотр изображения -->
+                                    <div class="form-group">
+                                        <label class="form-label">Изображение телефона</label>
+                                        <div class="image-preview-wrapper">
+                                            <div class="image-preview" id="imagePreview">
+                                                <div class="image-placeholder">
+                                                    <i class="fas fa-camera"></i>
+                                                    <span class="placeholder-text">Предпросмотр изображения</span>
+                                                    <small class="placeholder-hint">Изображение появится здесь после ввода URL</small>
+                                                </div>
+                                                <img id="previewImage" class="preview-image" style="display: none;" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- URL изображения -->
+                                    <div class="form-group">
+                                        <label asp-for="Phone.ImageUrl" class="form-label">URL изображения</label>
+                                        <div class="input-with-icon">
+                                            <i class="fas fa-link"></i>
+                                            <input asp-for="Phone.ImageUrl" class="form-control"
+                                                   placeholder="https://example.com/image.jpg"
+                                                   id="imageUrlInput" />
+                                        </div>
+                                        <div class="form-hint">
+                                            <i class="fas fa-info-circle"></i>
+                                            Введите ссылку на изображение телефона
+                                        </div>
+                                    </div>
+
+                                    <!-- Выбор цвета -->
+                                    <div class="form-group">
+                                        <label class="form-label">Цвет телефона</label>
+
+                                        <!-- Основной предпросмотр цвета с названием -->
+                                        <div class="color-main-preview">
+                                            <div class="color-preview-large" id="colorPreview">
+                                                <div class="color-info">
+                                                    <i class="fas fa-palette"></i>
+                                                    <div class="color-details">
+                                                        <div class="color-name" id="colorDisplayName">Выберите цвет</div>
+                                                        <div class="color-hex" id="colorDisplayHex">#000000</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Палитра цветов -->
+                                        <div class="color-palette-section">
+                                            <label class="color-palette-label">Палитра цветов</label>
+                                            <div class="color-picker-wrapper">
+                                                <input type="color" id="colorPicker" class="color-picker" value="#000000" title="Выберите цвет">
+                                                <span class="palette-hint">Нажмите для выбора цвета</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Быстрые цвета -->
+                                        <div class="quick-colors-section">
+                                            <label class="quick-colors-label">Популярные цвета</label>
+                                            <div class="colors-grid">
+                                                <button type="button" class="color-option" data-color="Черный" data-hex="#000000" title="Черный">
+                                                    <div class="color-swatch" style="background-color: #000000;"></div>
+                                                    <span class="color-label">Черный</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Белый" data-hex="#FFFFFF" title="Белый">
+                                                    <div class="color-swatch" style="background-color: #FFFFFF; border: 1px solid #ddd;"></div>
+                                                    <span class="color-label">Белый</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Серый" data-hex="#808080" title="Серый">
+                                                    <div class="color-swatch" style="background-color: #808080;"></div>
+                                                    <span class="color-label">Серый</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Красный" data-hex="#FF0000" title="Красный">
+                                                    <div class="color-swatch" style="background-color: #FF0000;"></div>
+                                                    <span class="color-label">Красный</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Синий" data-hex="#0000FF" title="Синий">
+                                                    <div class="color-swatch" style="background-color: #0000FF;"></div>
+                                                    <span class="color-label">Синий</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Зеленый" data-hex="#008000" title="Зеленый">
+                                                    <div class="color-swatch" style="background-color: #008000;"></div>
+                                                    <span class="color-label">Зеленый</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Фиолетовый" data-hex="#800080" title="Фиолетовый">
+                                                    <div class="color-swatch" style="background-color: #800080;"></div>
+                                                    <span class="color-label">Фиолетовый</span>
+                                                </button>
+                                                <button type="button" class="color-option" data-color="Золотой" data-hex="#FFD700" title="Золотой">
+                                                    <div class="color-swatch" style="background-color: #FFD700;"></div>
+                                                    <span class="color-label">Золотой</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Скрытое поле для цвета -->
+                                        <input asp-for="Phone.Color" type="hidden" id="colorNameInput" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопки действий -->
+                        <div class="form-actions">
+                            <div class="actions-wrapper">
+                                <a asp-page="Index" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Назад
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus-circle me-2"></i>
+                                    Добавить телефон
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <div class="mb-3">
-            <button type="submit" class="btn btn-success">Сохранить телефон</button>
-            <a asp-page="Index" class="btn btn-secondary">Отмена</a>
-        </div>
-    </form>
+    </div>
 </div>
 
 @section Scripts {
@@ -123,92 +268,669 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const colorOptions = document.querySelectorAll('.color-option');
-            const colorInput = document.getElementById('colorInput');
-            let selectedColor = '';
+            const colorPicker = document.getElementById('colorPicker');
+            const colorPreview = document.getElementById('colorPreview');
+            const colorNameInput = document.getElementById('colorNameInput');
+            const colorDisplayName = document.getElementById('colorDisplayName');
+            const colorDisplayHex = document.getElementById('colorDisplayHex');
+            const quickColors = document.querySelectorAll('.color-option');
 
-            colorOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const color = this.getAttribute('data-color');
-                    selectedColor = color;
-                    colorInput.value = color;
+            // Элементы для предпросмотра изображения
+            const imageUrlInput = document.getElementById('imageUrlInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const imagePlaceholder = imagePreview.querySelector('.image-placeholder');
 
-                    // Сбрасываем стили у всех кнопок
-                    colorOptions.forEach(opt => {
-                        opt.classList.remove('selected-color');
-                        opt.style.transform = 'scale(1)';
-                        opt.style.boxShadow = 'none';
-                    });
+            // Поля для автоматического удаления нулей
+            const priceInput = document.querySelector('.price-input');
+            const quantityInput = document.querySelector('.quantity-input');
 
-                    // Выделяем выбранную кнопку
-                    this.classList.add('selected-color');
-                    this.style.transform = 'scale(1.1)';
-                    this.style.boxShadow = '0 0 0 2px #007bff';
-                });
-            });
-
-            // Обработка ручного ввода
-            colorInput.addEventListener('input', function() {
-                selectedColor = this.value;
-
-                // Сбрасываем выделение если пользователь вводит свой цвет
-                colorOptions.forEach(opt => {
-                    opt.classList.remove('selected-color');
-                    opt.style.transform = 'scale(1)';
-                    opt.style.boxShadow = 'none';
-                });
-            });
-
-            // Показываем подсказку при наведении
-            colorOptions.forEach(option => {
-                option.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.05)';
-                    this.style.transition = 'all 0.2s ease';
-                });
-
-                option.addEventListener('mouseleave', function() {
-                    if (!this.classList.contains('selected-color')) {
-                        this.style.transform = 'scale(1)';
+            // Функция для автоматического удаления нулей при фокусе
+            function setupAutoClearZero(input) {
+                input.addEventListener('focus', function() {
+                    if (this.value === '0' || this.value === '0.00') {
+                        this.value = '';
                     }
                 });
+
+                input.addEventListener('blur', function() {
+                    if (this.value === '' || this.value === '0') {
+                        if (this.type === 'number' && this.step === '0.01') {
+                            this.value = '0.00';
+                        } else {
+                            this.value = '0';
+                        }
+                    }
+                });
+
+                // Очистка при вводе первого символа
+                input.addEventListener('input', function(e) {
+                    if ((this.value === '0' || this.value === '0.00') && e.data && e.data !== '0' && e.data !== '.') {
+                        this.value = '';
+                    }
+                });
+            }
+
+            // Применяем функцию к полям
+            if (priceInput) setupAutoClearZero(priceInput);
+            if (quantityInput) setupAutoClearZero(quantityInput);
+
+            // Расширенный словарь названий цветов
+            const colorNames = {
+                '#000000': 'Черный', '#080808': 'Темно-серый', '#101010': 'Серый уголь',
+                '#181818': 'Графитовый', '#202020': 'Антрацитовый', '#282828': 'Темный серый',
+                '#303030': 'Серый', '#383838': 'Серый', '#404040': 'Серый', '#484848': 'Серый',
+                '#505050': 'Серый', '#585858': 'Серый', '#606060': 'Серый', '#686868': 'Серый',
+                '#707070': 'Серый', '#787878': 'Серый', '#808080': 'Серый', '#888888': 'Серый',
+                '#909090': 'Светло-серый', '#989898': 'Светло-серый', '#A0A0A0': 'Светло-серый',
+                '#A8A8A8': 'Светло-серый', '#B0B0B0': 'Светло-серый', '#B8B8B8': 'Светло-серый',
+                '#C0C0C0': 'Серебристый', '#C8C8C8': 'Светло-серебристый', '#D0D0D0': 'Белый дым',
+                '#D8D8D8': 'Белый дым', '#E0E0E0': 'Белый дым', '#E8E8E8': 'Белый дым',
+                '#F0F0F0': 'Белый дым', '#F8F8F8': 'Белый дым', '#FFFFFF': 'Белый',
+                '#800000': 'Темно-красный', '#8B0000': 'Темно-красный', '#A52A2A': 'Коричневый',
+                '#B22222': 'Кирпичный', '#DC143C': 'Малиновый', '#FF0000': 'Красный',
+                '#FF6347': 'Томатный', '#FF7F50': 'Коралловый', '#CD5C5C': 'Индийский красный',
+                '#F08080': 'Светло-коралловый', '#E9967A': 'Темный лососевый', '#FA8072': 'Лососевый',
+                '#FFA07A': 'Светлый лососевый', '#FF4500': 'Оранжево-красный',
+                '#006400': 'Темно-зеленый', '#008000': 'Зеленый', '#228B22': 'Лесной зеленый',
+                '#32CD32': 'Лаймовый', '#00FF00': 'Лаймовый', '#7CFC00': 'Зеленая лужайка',
+                '#ADFF2F': 'Зелено-желтый', '#9ACD32': 'Желто-зеленый', '#6B8E23': 'Оливковый',
+                '#808000': 'Оливковый', '#556B2F': 'Темно-оливковый', '#66CDAA': 'Аквамарин',
+                '#000080': 'Темно-синий', '#00008B': 'Темно-синий', '#0000CD': 'Синий',
+                '#0000FF': 'Синий', '#1E90FF': 'Голубой', '#00BFFF': 'Небесно-голубой',
+                '#87CEEB': 'Небесно-голубой', '#87CEFA': 'Светло-голубой', '#4682B4': 'Стальной синий',
+                '#4169E1': 'Королевский синий', '#6495ED': 'Васильковый', '#7B68EE': 'Средний синий',
+                '#4B0082': 'Индиго', '#483D8B': 'Темно-синий', '#6A5ACD': 'Сланцевый синий',
+                '#7B68EE': 'Средний синий', '#800080': 'Фиолетовый', '#8A2BE2': 'Сине-фиолетовый',
+                '#9400D3': 'Темно-фиолетовый', '#9932CC': 'Темно-орхидея', '#BA55D3': 'Орхидея',
+                '#DA70D6': 'Орхидея', '#EE82EE': 'Фиолетовый', '#D8BFD8': 'Чертополох',
+                '#FFD700': 'Золотой', '#FFF8DC': 'Кукурузный', '#FFEBCD': 'Бланшированный миндаль',
+                '#FFE4B5': 'Мокасин', '#FFDEAD': 'Навахо белый', '#FFA500': 'Оранжевый',
+                '#FF8C00': 'Темно-оранжевый', '#FF7F50': 'Коралловый', '#FF6347': 'Томатный',
+                '#8B4513': 'Коричневый', '#A0522D': 'Сиена', '#D2691E': 'Шоколадный',
+                '#CD853F': 'Перу', '#F4A460': 'Песочный', '#DEB887': 'Бургундский',
+                '#FFC0CB': 'Розовый', '#FFB6C1': 'Светло-розовый', '#FF69B4': 'Ярко-розовый',
+                '#FF1493': 'Глубокий розовый', '#DB7093': 'Бледно-фиолетовый'
+            };
+
+            // Функция для определения названия цвета по HEX
+            function getColorName(hex) {
+                hex = hex.toUpperCase();
+                if (colorNames[hex]) {
+                    return colorNames[hex];
+                }
+
+                const hexValue = hex.replace('#', '');
+                const r = parseInt(hexValue.substr(0, 2), 16);
+                const g = parseInt(hexValue.substr(2, 2), 16);
+                const b = parseInt(hexValue.substr(4, 2), 16);
+
+                let closestColor = '';
+                let minDistance = Infinity;
+
+                for (const [colorHex, colorName] of Object.entries(colorNames)) {
+                    const compareHex = colorHex.replace('#', '');
+                    const cr = parseInt(compareHex.substr(0, 2), 16);
+                    const cg = parseInt(compareHex.substr(2, 2), 16);
+                    const cb = parseInt(compareHex.substr(4, 2), 16);
+
+                    const distance = Math.sqrt(
+                        Math.pow(r - cr, 2) +
+                        Math.pow(g - cg, 2) +
+                        Math.pow(b - cb, 2)
+                    );
+
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestColor = colorName;
+                    }
+                }
+
+                return closestColor || 'Неизвестный цвет';
+            }
+
+            // Функция обновления предпросмотра цвета
+            function updateColorPreview(colorName, colorHex) {
+                colorPreview.style.backgroundColor = colorHex;
+                colorDisplayName.textContent = colorName;
+                colorDisplayHex.textContent = colorHex.toUpperCase();
+                colorNameInput.value = colorName;
+
+                // Определяем контрастный цвет для текста
+                const hex = colorHex.replace('#', '');
+                const r = parseInt(hex.substr(0, 2), 16);
+                const g = parseInt(hex.substr(2, 2), 16);
+                const b = parseInt(hex.substr(4, 2), 16);
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+                const colorInfo = colorPreview.querySelector('.color-info');
+                colorInfo.style.color = brightness > 128 ? '#000000' : '#ffffff';
+            }
+
+            // Обработка быстрых цветов
+            quickColors.forEach(button => {
+                button.addEventListener('click', function() {
+                    const colorName = this.getAttribute('data-color');
+                    const colorHex = this.getAttribute('data-hex');
+                    colorPicker.value = colorHex;
+                    updateColorPreview(colorName, colorHex);
+                });
             });
+
+            // Обработка палитры
+            colorPicker.addEventListener('input', function() {
+                const colorHex = this.value;
+                const colorName = getColorName(colorHex);
+                updateColorPreview(colorName, colorHex);
+            });
+
+            // Обработка предпросмотра изображения
+            imageUrlInput.addEventListener('input', function() {
+                const imageUrl = this.value.trim();
+
+                if (imageUrl) {
+                    previewImage.src = imageUrl;
+                    previewImage.onload = function() {
+                        imagePlaceholder.style.display = 'none';
+                        previewImage.style.display = 'block';
+                        imagePreview.classList.add('has-image');
+                    };
+                    previewImage.onerror = function() {
+                        imagePlaceholder.style.display = 'flex';
+                        previewImage.style.display = 'none';
+                        imagePreview.classList.remove('has-image');
+                        imagePlaceholder.innerHTML = `
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span class="placeholder-text">Не удалось загрузить изображение</span>
+                            <small class="placeholder-hint">Проверьте URL и попробуйте снова</small>
+                        `;
+                    };
+                } else {
+                    imagePlaceholder.style.display = 'flex';
+                    previewImage.style.display = 'none';
+                    imagePreview.classList.remove('has-image');
+                    imagePlaceholder.innerHTML = `
+                        <i class="fas fa-camera"></i>
+                        <span class="placeholder-text">Предпросмотр изображения</span>
+                        <small class="placeholder-hint">Изображение появится здесь после ввода URL</small>
+                    `;
+                }
+            });
+
+            // Инициализация при загрузке
+            colorPicker.dispatchEvent(new Event('input'));
         });
     </script>
 
     <style>
-        .color-palette {
+        /* Общие стили */
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        /* Заголовок страницы */
+        .page-header {
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            background-color: #f8f9fa;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-icon-header {
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+            .phone-icon-header i {
+                font-size: 2.5rem;
+                color: white;
+            }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: white;
+            text-align: center;
+        }
+
+        /* Основная карточка */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card-body {
+            padding: 3rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        /* Секции */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+            .section-title i {
+                color: #2a5298;
+            }
+
+        /* Формы - улучшенная видимость полей */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+            .input-with-icon i {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #5a6c7d;
+                z-index: 2;
+            }
+
+            .input-with-icon .form-control {
+                padding-left: 45px;
+            }
+
+        .form-control {
+            border: 2px solid #d1d9e6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+            .form-control:focus {
+                border-color: #2a5298;
+                box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+                background: #ffffff;
+            }
+
+            .form-control::placeholder {
+                color: #8a94a6;
+            }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Подсказки и ошибки */
+        .form-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+            .form-hint i {
+                color: #2a5298;
+            }
+
+        .error-message {
+            font-size: 0.85rem;
+            color: #dc3545;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Предпросмотр изображения */
+        .image-preview-wrapper {
+            border: 2px dashed #d1d9e6;
+            border-radius: 16px;
+            padding: 8px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .image-preview-wrapper:hover {
+                border-color: #2a5298;
+            }
+
+        .image-preview {
+            width: 100%;
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+            .image-preview.has-image {
+                background: white;
+            }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            text-align: center;
+            padding: 2rem;
+        }
+
+            .image-placeholder i {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+                color: #ced4da;
+            }
+
+        .placeholder-text {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .placeholder-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: white;
+        }
+
+        /* Цветовой пикер */
+        .color-main-preview {
+            margin-bottom: 1.5rem;
+        }
+
+        .color-preview-large {
+            width: 100%;
+            height: 100px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid #e9ecef;
+        }
+
+        .color-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 2;
+        }
+
+            .color-info i {
+                font-size: 2rem;
+            }
+
+        .color-details {
+            text-align: left;
+        }
+
+        .color-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-hex {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        /* Палитра цветов */
+        .color-palette-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .color-palette-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .color-picker {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #d1d9e6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+            .color-picker:hover {
+                border-color: #2a5298;
+                transform: scale(1.05);
+            }
+
+        .palette-hint {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        /* Быстрые цвета */
+        .quick-colors-section {
+            margin-bottom: 1rem;
+        }
+
+        .quick-colors-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .colors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
         }
 
         .color-option {
-            width: 35px;
-            height: 35px;
-            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: white;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.2s ease;
-            border: 2px solid transparent;
-            padding: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
             .color-option:hover {
-                transform: scale(1.05);
-                border-color: #6c757d;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                border-color: #2a5298;
             }
 
-        .selected-color {
-            border: 2px solid #007bff !important;
-            box-shadow: 0 0 0 2px #007bff;
-            transform: scale(1.1);
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        .form-text {
-            font-size: 0.875rem;
+        .color-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Кнопки действий */
+        .form-actions {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .actions-wrapper {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+            color: white;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(42, 82, 152, 0.4);
+                background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+            .btn-secondary:hover {
+                background: #5a6268;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+                color: white;
+            }
+
+        /* Уведомления */
+        .custom-alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Адаптивность */
+        @@media (max-width: 768px) {
+            .card-body {
+                padding: 2rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .colors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .actions-wrapper {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .color-preview-large {
+                height: 80px;
+            }
+
+            .color-name {
+                font-size: 1.1rem;
+            }
+
+            .color-hex {
+                font-size: 0.9rem;
+            }
         }
     </style>
 }
