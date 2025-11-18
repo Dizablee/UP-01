@@ -465,7 +465,7 @@
     <style>
         /* Общие стили */
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #f0f2f5 0%, #d9e2ec 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -475,9 +475,10 @@
         }
 
         /* Заголовок страницы */
-        .page-header {
-            color: white;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        .page-header,
+        .page-title {
+            color: #000000 !important; /* принудительно чёрный */
+            text-shadow: none !important;
         }
 
         .header-content {
@@ -490,7 +491,7 @@
         .phone-icon-header {
             width: 80px;
             height: 80px;
-            background: rgba(255,255,255,0.15);
+            background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -498,6 +499,7 @@
             margin: 0 auto 1.5rem;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
+            font-size: 2.5rem;
         }
 
             .phone-icon-header i {
@@ -516,7 +518,7 @@
         .page-subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
-            color: white;
+            color: #000000 !important;
             text-align: center;
         }
 

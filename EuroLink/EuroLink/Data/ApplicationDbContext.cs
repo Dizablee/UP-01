@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EuroLink.Models;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace EuroLink.Data
 {
@@ -11,6 +9,7 @@ namespace EuroLink.Data
             : base(options)
         {
         }
+
         public DbSet<Phone> Phones { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -4,12 +4,11 @@ using EuroLink.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавление сервисов в контейнер
 builder.Services.AddRazorPages();
 
-// Настройка InMemory базы данных
+// Настройка SQLite базы данных
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("EuroLink"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Регистрация сервисов
 builder.Services.AddScoped<IPhoneRepository, PhoneRepository>();
@@ -17,14 +16,13 @@ builder.Services.AddScoped<PhoneService>();
 
 var app = builder.Build();
 
-// Автоматическое создание базы данных при запуске
+// Создание базы при запуске
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.EnsureCreated();
 }
 
-// Конфигурация HTTP pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
