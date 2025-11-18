@@ -1,25 +1,40 @@
+using Microsoft.EntityFrameworkCore;
+using EuroLink.Data;
+using EuroLink.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Добавление сервисов в контейнер
 builder.Services.AddRazorPages();
+
+// Настройка InMemory базы данных
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseInMemoryDatabase("EuroLink"));
+
+// Регистрация сервисов
+builder.Services.AddScoped<IPhoneRepository, PhoneRepository>();
+builder.Services.AddScoped<PhoneService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Автоматическое создание базы данных при запуске
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.EnsureCreated();
+}
+
+// Конфигурация HTTP pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapRazorPages();
 
 app.Run();
