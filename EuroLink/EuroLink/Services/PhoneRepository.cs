@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EuroLink.Data;
 using EuroLink.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EuroLink.Services
 {
@@ -13,24 +15,24 @@ namespace EuroLink.Services
             _context = context;
         }
 
-        public async Task<Phone?> GetPhoneByBrandAndModelAsync(string brand, string model)
+        public Phone? GetPhoneByBrandAndModel(string brand, string model)
         {
-            return await _context.Phones
-                .FirstOrDefaultAsync(p => p.Brand == brand && p.Model == model);
+            return _context.Phones
+                .FirstOrDefault(p => p.Brand == brand && p.Model == model);
         }
 
-        public async Task<bool> PhoneExistsAsync(string brand, string model)
+        public bool PhoneExists(string brand, string model)
         {
-            return await _context.Phones
-                .AnyAsync(p => p.Brand == brand && p.Model == model);
+            return _context.Phones
+                .Any(p => p.Brand == brand && p.Model == model);
         }
 
-        public async Task<bool> CreatePhoneAsync(Phone phone)
+        public bool CreatePhone(Phone phone)
         {
             try
             {
                 _context.Phones.Add(phone);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return true;
             }
             catch (DbUpdateException)
@@ -39,12 +41,12 @@ namespace EuroLink.Services
             }
         }
 
-        public async Task<List<Phone>> GetAllPhonesAsync()
+        public List<Phone> GetAllPhones()
         {
-            return await _context.Phones
+            return _context.Phones
                 .OrderBy(p => p.Brand)
                 .ThenBy(p => p.Model)
-                .ToListAsync();
+                .ToList();
         }
     }
 }

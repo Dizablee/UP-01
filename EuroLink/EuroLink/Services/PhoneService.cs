@@ -11,7 +11,7 @@ namespace EuroLink.Services
             _phoneRepository = phoneRepository;
         }
 
-        public async Task<OperationResult> AddPhoneToCatalogAsync(
+        public OperationResult AddPhoneToCatalog(
             string brand,
             string model,
             decimal price,
@@ -36,7 +36,7 @@ namespace EuroLink.Services
             if (stockQuantity < 0)
                 return OperationResult.Failure("Количество не может быть отрицательным");
 
-            if (await _phoneRepository.PhoneExistsAsync(brand.Trim(), model.Trim()))
+            if (_phoneRepository.PhoneExists(brand.Trim(), model.Trim()))
                 return OperationResult.Failure("Телефон с такой комбинацией бренда и модели уже существует");
 
             var phone = new Phone
@@ -50,8 +50,7 @@ namespace EuroLink.Services
                 Description = description?.Trim(),
                 ImageUrl = imageUrl?.Trim()
             };
-
-            var created = await _phoneRepository.CreatePhoneAsync(phone);
+            var created = _phoneRepository.CreatePhone(phone);
             if (!created)
                 return OperationResult.Failure("Ошибка при сохранении телефона в базу данных");
 

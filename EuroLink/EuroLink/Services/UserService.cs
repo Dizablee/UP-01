@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EULib
 {
@@ -15,35 +14,36 @@ namespace EULib
             _userRepository = userRepository;
         }
 
-        public async Task<RegistrationResult> RegisterUserAsync(
+        public RegistrationResult RegisterUser(
             string email,
             string password,
             string confirmPassword,
             string fullName)
         {
-          
+            // Валидация email
             if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
                 return RegistrationResult.Failure("Неверный формат электронной почты");
 
-          
+            // Валидация пароля
             if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
                 return RegistrationResult.Failure("Пароль должен содержать не менее 8 символов");
 
-           
+            // Проверка совпадения паролей
             if (password != confirmPassword)
                 return RegistrationResult.Failure("Пароли не совпадают");
 
-           
+            // Валидация ФИО
             if (string.IsNullOrWhiteSpace(fullName) || fullName.Trim().Length < 2)
                 return RegistrationResult.Failure("ФИО должно содержать не менее 2 символов");
 
             if (!ContainsOnlyLettersAndSpaces(fullName))
                 return RegistrationResult.Failure("ФИО может содержать только буквы и пробелы");
 
-            if (await _userRepository.IsEmailExistsAsync(email))
+            // Синхронная проверка email
+            if (_userRepository.IsEmailExists(email))
                 return RegistrationResult.Failure("Адрес электронной почты уже зарегистрирован");
 
-         
+            // Создание пользователя
             var user = new User
             {
                 Email = email.Trim().ToLower(),
@@ -54,7 +54,8 @@ namespace EULib
                 IsActive = true
             };
 
-            var created = await _userRepository.CreateUserAsync(user);
+       
+            var created = _userRepository.CreateUser(user);
             if (!created)
                 return RegistrationResult.Failure("Ошибка при создании пользователя");
 
@@ -68,7 +69,7 @@ namespace EULib
 
             try
             {
-                // Триммим email перед проверкой
+              
                 var trimmedEmail = email.Trim();
                 var addr = new System.Net.Mail.MailAddress(trimmedEmail);
                 return addr.Address == trimmedEmail;
@@ -89,7 +90,6 @@ namespace EULib
 
         private string HashPassword(string password)
         {
-           
             return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
         }
     }
