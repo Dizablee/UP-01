@@ -9,5 +9,8 @@ namespace EuroLink.Services
         bool CreatePhone(Phone phone);
         bool PhoneExists(string brand, string model);
         List<Phone> GetAllPhones();
+
+        Phone? GetPhoneById(int phoneId);
+        string? DeletePhones(List<int> phoneIds);
     }
 }

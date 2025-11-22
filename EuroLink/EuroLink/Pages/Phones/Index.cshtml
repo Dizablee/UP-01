@@ -25,100 +25,157 @@
                 <i class="fas fa-list section-icon"></i>
                 <h3 class="section-title mb-0">Список телефонов</h3>
             </div>
-            <a asp-page="Create" class="btn btn-primary btn-add">
-                <i class="fas fa-plus-circle me-2"></i>
-                Добавить телефон
-            </a>
+            <div class="d-flex gap-2">
+                <!-- Панель удаления (показывается только в режиме удаления) -->
+                @if (Model.ShowDeletePanel)
+                {
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)">
+                            <label class="form-check-label fw-bold" for="selectAllCheckbox">
+                                Выбрать все
+                            </label>
+                        </div>
+                        <span id="selectedCount" class="text-muted">Выбрано: 0</span>
+                        <form method="post" asp-page-handler="CancelDelete" class="d-inline">
+                            <button type="submit" class="btn btn-cancel">
+                                <i class="fas fa-times me-1"></i>
+                                Отмена
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-delete" onclick="showDeleteConfirmation()" id="deleteBtn" disabled>
+                            <i class="fas fa-trash me-2"></i>
+                            Удалить выбранные
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="ToggleDeleteMode" class="d-inline">
+                        <button type="submit" class="btn btn-delete">
+                            <i class="fas fa-trash-alt me-2"></i>
+                            Удалить телефоны
+                        </button>
+                    </form>
+                }
+
+                <a asp-page="Create" class="btn btn-add">
+                    <i class="fas fa-plus-circle me-2"></i>
+                    Добавить телефон
+                </a>
+            </div>
         </div>
+
+        <!-- Сообщения об ошибках -->
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                @Model.ErrorMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
 
         @if (Model.Phones != null && Model.Phones.Any())
         {
-            <div class="row g-4">
-                @foreach (var phone in Model.Phones)
-                {
-                    <div class="col-md-6 col-lg-4">
-                        <div class="phone-card">
-                            <!-- Блок с изображением - УВЕЛИЧЕН -->
-                            <div class="phone-image-container">
-                                @if (!string.IsNullOrEmpty(phone.ImageUrl))
+            <form method="post" asp-page-handler="DeletePhones" id="deleteForm">
+                <div class="row g-4">
+                    @foreach (var phone in Model.Phones)
+                    {
+                        <div class="col-md-6 col-lg-4">
+                            <div class="phone-card @(Model.ShowDeletePanel ? "delete-mode" : "")" data-phone-id="@phone.Id">
+                                <!-- Чекбокс для выбора (виден только в режиме удаления) -->
+                                @if (Model.ShowDeletePanel)
                                 {
-                                    <img src="@phone.ImageUrl"
-                                         class="phone-image"
-                                         alt="@phone.Brand @phone.Model"
-                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                                    <div class="image-placeholder" style="display: none;">
-                                        <i class="fas fa-mobile-alt"></i>
+                                    <div class="phone-checkbox">
+                                        <input type="checkbox" class="phone-select-checkbox" name="SelectedPhoneIds" value="@phone.Id"
+                                               id="phone_@phone.Id" onchange="updateSelection()">
+                                        <label for="phone_@phone.Id" class="checkbox-label"></label>
                                     </div>
                                 }
-                                else
-                                {
-                                    <div class="image-placeholder">
-                                        <i class="fas fa-mobile-alt"></i>
-                                    </div>
-                                }
-                                <div class="phone-badge @(phone.StockQuantity > 0 ? "in-stock" : "out-of-stock")">
-                                    @if (phone.StockQuantity > 0)
+
+                                <!-- Блок с изображением -->
+                                <div class="phone-image-container">
+                                    @if (!string.IsNullOrEmpty(phone.ImageUrl))
                                     {
-                                        <i class="fas fa-check-circle me-1"></i>
-                                        <span>В наличии</span>
+                                        <img src="@phone.ImageUrl"
+                                             class="phone-image"
+                                             alt="@phone.Brand @phone.Model"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                                        <div class="image-placeholder" style="display: none;">
+                                            <i class="fas fa-mobile-alt"></i>
+                                        </div>
                                     }
                                     else
                                     {
-                                        <i class="fas fa-times-circle me-1"></i>
-                                        <span>Нет в наличии</span>
+                                        <div class="image-placeholder">
+                                            <i class="fas fa-mobile-alt"></i>
+                                        </div>
                                     }
-                                </div>
-                            </div>
-
-                            <div class="phone-content">
-                                <div class="phone-header">
-                                    <h3 class="phone-brand">@phone.Brand</h3>
-                                    <h2 class="phone-model">@phone.Model</h2>
-                                </div>
-
-                                <div class="phone-price-section">
-                                    <div class="price-main">@phone.Price.ToString("N0") ₽</div>
-                                    <div class="stock-main">
-                                        <i class="fas fa-box me-2"></i>
-                                        <strong>@phone.StockQuantity шт.</strong>
+                                    <div class="phone-badge @(phone.StockQuantity > 0 ? "in-stock" : "out-of-stock")">
+                                        @if (phone.StockQuantity > 0)
+                                        {
+                                            <i class="fas fa-check-circle me-1"></i>
+                                            <span>В наличии</span>
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-times-circle me-1"></i>
+                                            <span>Нет в наличии</span>
+                                        }
                                     </div>
                                 </div>
 
-                                <div class="phone-specs">
-                                    @if (!string.IsNullOrEmpty(phone.Color))
-                                    {
-                                        <div class="spec-item">
-                                            <i class="fas fa-palette"></i>
-                                            <span><strong>Цвет:</strong> @phone.Color</span>
-                                        </div>
-                                    }
-                                    @if (!string.IsNullOrEmpty(phone.Memory))
-                                    {
-                                        <div class="spec-item">
-                                            <i class="fas fa-sd-card"></i>
-                                            <span><strong>Память:</strong> @phone.Memory</span>
-                                        </div>
-                                    }
-                                </div>
-
-                                @if (!string.IsNullOrEmpty(phone.Description))
-                                {
-                                    <div class="phone-description">
-                                        <p>@phone.Description</p>
+                                <div class="phone-content">
+                                    <div class="phone-header">
+                                        <h3 class="phone-brand">@phone.Brand</h3>
+                                        <h2 class="phone-model">@phone.Model</h2>
                                     </div>
-                                }
 
-                                <div class="phone-actions">
-                                    <button class="btn btn-view">
-                                        <i class="fas fa-eye me-2"></i>
-                                        Подробнее
-                                    </button>
+                                    <div class="phone-price-section">
+                                        <div class="price-main">@phone.Price.ToString("N0") ₽</div>
+                                        <div class="stock-main">
+                                            <i class="fas fa-box me-2"></i>
+                                            <strong>@phone.StockQuantity шт.</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="phone-specs">
+                                        @if (!string.IsNullOrEmpty(phone.Color))
+                                        {
+                                            <div class="spec-item">
+                                                <i class="fas fa-palette"></i>
+                                                <span><strong>Цвет:</strong> @phone.Color</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(phone.Memory))
+                                        {
+                                            <div class="spec-item">
+                                                <i class="fas fa-sd-card"></i>
+                                                <span><strong>Память:</strong> @phone.Memory</span>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(phone.Description))
+                                    {
+                                        <div class="phone-description">
+                                            <p>@phone.Description</p>
+                                        </div>
+                                    }
+
+                                    <div class="phone-actions">
+                                        <button class="btn btn-view">
+                                            <i class="fas fa-eye me-2"></i>
+                                            Подробнее
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            </form>
         }
         else
         {
@@ -134,6 +191,36 @@
                 </a>
             </div>
         }
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Подтверждение удаления
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить выбранные телефоны? Это действие необратимо.</p>
+                <p class="text-muted small">Вы можете снять выделение с телефонов, которые не хотите удалять:</p>
+                <div id="selectedPhonesList" class="selected-phones-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>
+                    Отмена
+                </button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-trash me-1"></i>
+                    Удалить выбранные
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -224,22 +311,60 @@
         margin: 0;
     }
 
-    .btn-add {
+    /* Кнопки одинакового размера */
+    .btn-add, .btn-delete, .btn-cancel {
         padding: 18px 36px;
         border-radius: 15px;
         font-weight: 600;
         font-size: 1.3rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border: none;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-add {
         background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
         color: white;
-        border: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        margin-right: 2rem;
     }
 
         .btn-add:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+    }
+
+        .btn-delete:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+            color: white;
+        }
+
+        .btn-delete:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+    .btn-cancel {
+        background: white;
+        color: #6c757d;
+        border: 2px solid #6c757d;
+    }
+
+        .btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+            background: #6c757d;
             color: white;
         }
 
@@ -255,6 +380,7 @@
         flex-direction: column;
         border: 1px solid #f0f0f0;
         margin-right: 1rem;
+        position: relative;
     }
 
         .phone-card:hover {
@@ -363,9 +489,8 @@
         border-radius: 12px;
     }
 
-    /* ЦЕНА - УВЕЛИЧЕНА */
     .price-main {
-        font-size: 2.2rem; /* УВЕЛИЧЕНО с 1.8rem */
+        font-size: 2.2rem;
         font-weight: 800;
         color: #28a745;
     }
@@ -378,7 +503,7 @@
         font-weight: 600;
     }
 
-    /* Спецификации - УВЕЛИЧЕНЫ */
+    /* Спецификации */
     .phone-specs {
         margin-bottom: 1rem;
         flex-shrink: 0;
@@ -388,9 +513,9 @@
         display: flex;
         align-items: center;
         gap: 0.8rem;
-        padding: 0.8rem 0; /* УВЕЛИЧЕН отступ */
+        padding: 0.8rem 0;
         color: #2c3e50;
-        font-size: 1.15rem; /* УВЕЛИЧЕНО с 1rem */
+        font-size: 1.15rem;
         border-bottom: 1px solid #f0f0f0;
     }
 
@@ -401,10 +526,10 @@
         .spec-item i {
             color: #667eea;
             width: 20px;
-            font-size: 1.3rem; /* УВЕЛИЧЕНО с 1.1rem */
+            font-size: 1.3rem;
         }
 
-    /* Описание - УВЕЛИЧЕНО */
+    /* Описание */
     .phone-description {
         flex: 1;
         margin-bottom: 1rem;
@@ -413,9 +538,9 @@
     }
 
         .phone-description p {
-            font-size: 1.1rem; /* УВЕЛИЧЕНО с 0.95rem */
+            font-size: 1.1rem;
             color: #6c757d;
-            line-height: 1.5; /* УВЕЛИЧЕНО с 1.4 */
+            line-height: 1.5;
             margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 5;
@@ -485,6 +610,116 @@
         font-size: 1.4rem;
     }
 
+    /* Стили для функционала удаления */
+    .phone-checkbox {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 20;
+    }
+
+    .phone-select-checkbox {
+        display: none;
+    }
+
+    .checkbox-label {
+        width: 24px;
+        height: 24px;
+        background: white;
+        border: 2px solid #dc3545;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .phone-select-checkbox:checked + .checkbox-label {
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+        .phone-select-checkbox:checked + .checkbox-label::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+    .phone-card.phone-selected {
+        border: 2px solid #dc3545;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+    }
+
+    /* Убираем hover в режиме удаления */
+    .delete-mode.phone-card:hover {
+        transform: none;
+    }
+
+    .delete-mode.phone-selected:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Стили для модального окна */
+    .selected-phones-list {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 10px;
+        background: #f8f9fa;
+    }
+
+    .selected-phone-item {
+        padding: 10px 12px;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+        .selected-phone-item:last-child {
+            border-bottom: none;
+        }
+
+        .selected-phone-item:hover {
+            background-color: #e9ecef;
+        }
+
+    .phone-checkbox-modal {
+        margin-right: 10px;
+    }
+
+    .phone-info-modal {
+        flex: 1;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    .phone-price-modal {
+        color: #28a745;
+        font-weight: 600;
+        margin-right: 15px;
+    }
+
+    .remove-phone-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+        .remove-phone-btn:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
     /* Адаптивность */
     @@media (max-width: 1200px) {
         .content-wrapper {
@@ -501,7 +736,7 @@
         }
 
         .price-main {
-            font-size: 2rem; /* Адаптивный размер */
+            font-size: 2rem;
         }
 
         .spec-item {
@@ -528,10 +763,6 @@
             padding-right: 1rem;
         }
 
-        .btn-add {
-            margin-right: 1rem;
-        }
-
         .empty-state {
             margin: 2rem 1rem;
         }
@@ -554,7 +785,7 @@
         }
 
         .price-main {
-            font-size: 1.8rem; /* Адаптивный размер */
+            font-size: 1.8rem;
         }
 
         .spec-item {
@@ -564,6 +795,11 @@
 
         .phone-description p {
             font-size: 1rem;
+        }
+
+        .btn-add, .btn-delete, .btn-cancel {
+            padding: 14px 28px;
+            font-size: 1.1rem;
         }
     }
 
@@ -586,7 +822,7 @@
         }
 
         .price-main {
-            font-size: 1.7rem; /* Адаптивный размер */
+            font-size: 1.7rem;
         }
 
         .phone-image-container {
@@ -610,5 +846,129 @@
         .phone-description p {
             font-size: 0.95rem;
         }
+
+        .btn-add, .btn-delete, .btn-cancel {
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+
+        .phone-checkbox {
+            top: 10px;
+            left: 10px;
+        }
+
+        .checkbox-label {
+            width: 20px;
+            height: 20px;
+        }
     }
 </style>
+
+@section Scripts {
+    <script>
+        // Обновление счетчика выбранных телефонов
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.phone-select-checkbox:checked');
+            const count = checkboxes.length;
+            document.getElementById('selectedCount').textContent = `Выбрано: ${count}`;
+            document.getElementById('deleteBtn').disabled = count === 0;
+
+            // Добавляем/убираем класс выделения
+            checkboxes.forEach(checkbox => {
+                const card = checkbox.closest('.phone-card');
+                if (checkbox.checked) {
+                    card.classList.add('phone-selected');
+                } else {
+                    card.classList.remove('phone-selected');
+                }
+            });
+        }
+
+        // Выбор всех телефонов
+        function toggleSelectAll(selectAllCheckbox) {
+            const checkboxes = document.querySelectorAll('.phone-select-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateSelection();
+        }
+
+        // Показать модальное окно подтверждения с возможностью исключения
+        function showDeleteConfirmation() {
+            const checkboxes = document.querySelectorAll('.phone-select-checkbox:checked');
+            const selectedPhonesList = document.getElementById('selectedPhonesList');
+            selectedPhonesList.innerHTML = '';
+
+            checkboxes.forEach(checkbox => {
+                const card = checkbox.closest('.phone-card');
+                const brand = card.querySelector('.phone-brand').textContent;
+                const model = card.querySelector('.phone-model').textContent;
+                const price = card.querySelector('.price-main').textContent;
+                const phoneId = checkbox.value;
+
+                const item = document.createElement('div');
+                item.className = 'selected-phone-item';
+                item.innerHTML = `
+                    <input type="checkbox" class="phone-checkbox-modal" checked
+                           onchange="togglePhoneInModal(this, '${phoneId}')">
+                    <span class="phone-info-modal">${brand} ${model}</span>
+                    <span class="phone-price-modal">${price}</span>
+                    <button type="button" class="remove-phone-btn" onclick="removePhoneFromModal('${phoneId}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                selectedPhonesList.appendChild(item);
+            });
+
+            const modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+            modal.show();
+        }
+
+        // Исключить телефон из удаления через чекбокс
+        function togglePhoneInModal(checkbox, phoneId) {
+            const mainCheckbox = document.querySelector(`.phone-select-checkbox[value="${phoneId}"]`);
+            if (mainCheckbox) {
+                mainCheckbox.checked = checkbox.checked;
+                updateSelection();
+
+                // Обновляем внешний вид элемента в модальном окне
+                const item = checkbox.closest('.selected-phone-item');
+                if (checkbox.checked) {
+                    item.style.opacity = '1';
+                } else {
+                    item.style.opacity = '0.6';
+                }
+            }
+        }
+
+        // Исключить телефон из удаления через кнопку
+        function removePhoneFromModal(phoneId) {
+            const mainCheckbox = document.querySelector(`.phone-select-checkbox[value="${phoneId}"]`);
+            if (mainCheckbox) {
+                mainCheckbox.checked = false;
+                updateSelection();
+
+                // Удаляем элемент из модального окна
+                const items = document.querySelectorAll('.selected-phone-item');
+                items.forEach(item => {
+                    const checkbox = item.querySelector('.phone-checkbox-modal');
+                    if (checkbox && checkbox.getAttribute('onchange').includes(phoneId)) {
+                        item.remove();
+                    }
+                });
+            }
+        }
+
+        // Подтверждение удаления
+        function confirmDelete() {
+            document.getElementById('deleteForm').submit();
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            if (@Model.ShowDeletePanel.ToString().ToLower()) {
+                updateSelection();
+            }
+        });
+    </script>
+}

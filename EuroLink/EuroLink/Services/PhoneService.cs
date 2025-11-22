@@ -52,5 +52,26 @@ namespace EuroLink.Services
 
             return OperationResult.Success(phone);
         }
+        public string? DeletePhonesFromCatalog(List<int> phoneIds)
+        {
+            // Валидация входных данных
+            var validationError = ValidatePhoneIds(phoneIds);
+            if (validationError != null)
+                return validationError;
+
+            // Выполняем удаление через репозиторий
+            return _phoneRepository.DeletePhones(phoneIds);
+        }
+
+        private string? ValidatePhoneIds(List<int> phoneIds)
+        {
+            if (phoneIds == null || phoneIds.Count == 0)
+                return "Не выбрано ни одного телефона для удаления";
+
+            if (phoneIds.Any(id => id <= 0))
+                return "Указаны невалидные идентификаторы телефонов";
+
+            return null; // Валидация пройдена
+        }
     }
 }

@@ -42,5 +42,38 @@ namespace EuroLink.Services
                 .OrderBy(p => p.Brand)
                 .ThenBy(p => p.Model)];
         }
+        public Phone? GetPhoneById(int phoneId)
+        {
+            return _context.Phones
+                .FirstOrDefault(p => p.Id == phoneId);
+        }
+
+        public string? DeletePhones(List<int> phoneIds)
+        {
+            if (phoneIds == null || !phoneIds.Any())
+                return "Не выбрано телефонов для удаления";
+
+            try
+            {
+                var phonesToDelete = _context.Phones
+                    .Where(p => phoneIds.Contains(p.Id))
+                    .ToList();
+
+                if (!phonesToDelete.Any())
+                    return null; // Нечего удалять - не ошибка
+
+                _context.Phones.RemoveRange(phonesToDelete);
+                _context.SaveChanges();
+                return null; // Успех
+            }
+            catch (DbUpdateException ex)
+            {
+                return $"Ошибка базы данных: {ex.Message}";
+            }
+            catch (Exception ex)
+            {
+                return $"Ошибка при удалении: {ex.Message}";
+            }
+        }
     }
 }
