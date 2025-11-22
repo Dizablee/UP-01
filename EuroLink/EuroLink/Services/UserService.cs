@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Net.Mail;
+using EuroLink.Models;
 
-namespace EULib
+namespace EuroLink.Services
 {
-    public class UserService
+    public class UserService(IUserRepository userRepository)
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository = userRepository;
 
-        public UserService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
-
-        public RegistrationResult RegisterUser(
+        public (bool success, string message, User? user) RegisterUser(
             string email,
             string password,
             string confirmPassword,
@@ -22,26 +15,26 @@ namespace EULib
         {
             // Валидация email
             if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
-                return RegistrationResult.Failure("Неверный формат электронной почты");
+                return (false, "Неверный формат электронной почты", null);
 
             // Валидация пароля
             if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
-                return RegistrationResult.Failure("Пароль должен содержать не менее 8 символов");
+                return (false, "Пароль должен содержать не менее 8 символов", null);
 
             // Проверка совпадения паролей
             if (password != confirmPassword)
-                return RegistrationResult.Failure("Пароли не совпадают");
+                return (false, "Пароли не совпадают", null);
 
             // Валидация ФИО
             if (string.IsNullOrWhiteSpace(fullName) || fullName.Trim().Length < 2)
-                return RegistrationResult.Failure("ФИО должно содержать не менее 2 символов");
+                return (false, "ФИО должно содержать не менее 2 символов", null);
 
             if (!ContainsOnlyLettersAndSpaces(fullName))
-                return RegistrationResult.Failure("ФИО может содержать только буквы и пробелы");
+                return (false, "ФИО может содержать только буквы и пробелы", null);
 
             // Синхронная проверка email
             if (_userRepository.IsEmailExists(email))
-                return RegistrationResult.Failure("Адрес электронной почты уже зарегистрирован");
+                return (false, "Адрес электронной почты уже зарегистрирован", null);
 
             // Создание пользователя
             var user = new User
@@ -54,24 +47,22 @@ namespace EULib
                 IsActive = true
             };
 
-       
             var created = _userRepository.CreateUser(user);
             if (!created)
-                return RegistrationResult.Failure("Ошибка при создании пользователя");
+                return (false, "Ошибка при создании пользователя", null);
 
-            return RegistrationResult.Success(user);
+            return (true, "Пользователь успешно зарегистрирован", user);
         }
 
-        private bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return false;
 
             try
             {
-              
                 var trimmedEmail = email.Trim();
-                var addr = new System.Net.Mail.MailAddress(trimmedEmail);
+                var addr = new MailAddress(trimmedEmail);
                 return addr.Address == trimmedEmail;
             }
             catch
@@ -80,7 +71,7 @@ namespace EULib
             }
         }
 
-        private bool ContainsOnlyLettersAndSpaces(string text)
+        private static bool ContainsOnlyLettersAndSpaces(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return false;
@@ -88,26 +79,9 @@ namespace EULib
             return text.All(c => char.IsLetter(c) || c == ' ' || c == '-' || c == '.');
         }
 
-        private string HashPassword(string password)
+        private static string HashPassword(string password)
         {
             return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
         }
-    }
-
-    public class RegistrationResult
-    {
-        public bool IsSuccess { get; }
-        public string ErrorMessage { get; }
-        public User User { get; }
-
-        private RegistrationResult(bool isSuccess, string errorMessage, User user)
-        {
-            IsSuccess = isSuccess;
-            ErrorMessage = errorMessage;
-            User = user;
-        }
-
-        public static RegistrationResult Success(User user) => new RegistrationResult(true, string.Empty, user);
-        public static RegistrationResult Failure(string errorMessage) => new RegistrationResult(false, errorMessage, null);
     }
 }

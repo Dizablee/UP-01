@@ -5,17 +5,12 @@ using EuroLink.Services;
 
 namespace EuroLink.Pages.Phones
 {
-    public class CreateModel : PageModel
+    public class CreateModel(PhoneService phoneService) : PageModel
     {
-        private readonly PhoneService _phoneService;
-
-        public CreateModel(PhoneService phoneService)
-        {
-            _phoneService = phoneService;
-        }
+        private readonly PhoneService _phoneService = phoneService;
 
         [BindProperty]
-        public Phone Phone { get; set; } = new Phone();
+        public Phone Phone { get; set; } = new();
 
         public bool SuccessMessage { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
@@ -24,14 +19,14 @@ namespace EuroLink.Pages.Phones
         {
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            var result = await _phoneService.AddPhoneToCatalogAsync(
+            var result = _phoneService.AddPhoneToCatalog(
                 Phone.Brand,
                 Phone.Model,
                 Phone.Price,
@@ -44,7 +39,7 @@ namespace EuroLink.Pages.Phones
             if (result.IsSuccess)
             {
                 SuccessMessage = true;
-                Phone = new Phone();
+                Phone = new();
                 ModelState.Clear();
             }
             else

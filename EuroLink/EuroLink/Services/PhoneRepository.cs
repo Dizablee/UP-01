@@ -6,14 +6,9 @@ using System.Linq;
 
 namespace EuroLink.Services
 {
-    public class PhoneRepository : IPhoneRepository
+    public class PhoneRepository(ApplicationDbContext context) : IPhoneRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public PhoneRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public Phone? GetPhoneByBrandAndModel(string brand, string model)
         {
@@ -43,10 +38,9 @@ namespace EuroLink.Services
 
         public List<Phone> GetAllPhones()
         {
-            return _context.Phones
+            return [.. _context.Phones
                 .OrderBy(p => p.Brand)
-                .ThenBy(p => p.Model)
-                .ToList();
+                .ThenBy(p => p.Model)];
         }
     }
 }

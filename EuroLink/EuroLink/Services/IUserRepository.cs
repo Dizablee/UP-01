@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using EuroLink.Models;
 
-namespace EULib
+namespace EuroLink.Services
 {
     public interface IUserRepository
     {

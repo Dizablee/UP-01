@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EULib
+﻿namespace EuroLink.Models
 {
     public class User
     {
@@ -16,6 +10,7 @@ namespace EULib
         public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
     }
+
     public enum Role
     {
         Client,

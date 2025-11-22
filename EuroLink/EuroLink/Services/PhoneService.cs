@@ -2,14 +2,9 @@
 
 namespace EuroLink.Services
 {
-    public class PhoneService
+    public class PhoneService(IPhoneRepository phoneRepository)
     {
-        private readonly IPhoneRepository _phoneRepository;
-
-        public PhoneService(IPhoneRepository phoneRepository)
-        {
-            _phoneRepository = phoneRepository;
-        }
+        private readonly IPhoneRepository _phoneRepository = phoneRepository;
 
         public OperationResult AddPhoneToCatalog(
             string brand,
@@ -50,6 +45,7 @@ namespace EuroLink.Services
                 Description = description?.Trim(),
                 ImageUrl = imageUrl?.Trim()
             };
+
             var created = _phoneRepository.CreatePhone(phone);
             if (!created)
                 return OperationResult.Failure("Ошибка при сохранении телефона в базу данных");
